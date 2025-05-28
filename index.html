@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>TOP50 랭킹 | 전국체대학 실기챌린지</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #5e72e4;
+      --primary-light: #825ee4;
+      --dark: #2d3748;
+      --light: #f8fafc;
+      --gray: #718096;
+      --card-bg: #ffffff;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Noto Sans KR', 'Roboto', sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+      padding: 20px;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .header h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 5px;
+    }
+    
+    .header p {
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .tab-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .tab-btn {
+      white-space: nowrap;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      background: #edf2f7;
+      color: var(--dark);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+    
+    .tab-btn:hover {
+      background: #e2e8f0;
+    }
+    
+    .tab-btn.active {
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      color: white;
+      box-shadow: 0 2px 10px rgba(94, 114, 228, 0.3);
+    }
+    
+    .search-wrap {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+      position: relative;
+    }
+    
+    .search-wrap input {
+      flex: 1;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: white;
+      transition: all 0.2s ease;
+    }
+    
+    .search-wrap input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
+    }
+    
+    .search-wrap input::placeholder {
+      color: #a0aec0;
+    }
+    
+    #clearSearch {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--gray);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 10px;
+      display: none;
+    }
+    
+    .table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      background: white;
+    }
+    
+    th, td {
+      padding: 12px 10px;
+      text-align: center;
+      border-bottom: 1px solid #edf2f7;
+    }
+    
+    th {
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      color: white;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+    
+    tr:hover {
+      background-color: #f8fafc;
+    }
+    
+    .rank-1 td {
+      background-color: rgba(255, 215, 0, 0.1);
+    }
+    
+    .rank-2 td {
+      background-color: rgba(192, 192, 192, 0.1);
+    }
+    
+    .rank-3 td {
+      background-color: rgba(205, 127, 50, 0.1);
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+      
+      .header h2 {
+        font-size: 1.6rem;
+      }
+      
+      .card {
+        padding: 16px;
+      }
+      
+      th, td {
+        padding: 10px 8px;
+        font-size: 0.85rem;
+      }
+      
+      .tab-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .header h2 {
+        font-size: 1.4rem;
+      }
+      
+      th, td {
+        padding: 8px 6px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>체육대학 전국실기챌린지(중부)</h2>
+      <p>TOP50 랭킹을 확인하세요</p>
+    </div>
+    
+    <div class="card">
+      <div class="tab-list" id="tabs"></div>
+      <div class="search-wrap">
+        <input type="text" id="search" placeholder="이름, 교육원, 수험번호 검색" />
+        <button id="clearSearch">✕</button>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="table-container">
+        <table id="rankTable">
+          <thead>
+            <tr>
+              <th>순위</th>
+              <th>수험번호</th>
+              <th>교육원</th>
+              <th>이름</th>
+              <th>성별</th>
+              <th>학년</th>
+              <th>기록</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 종목 및 인덱스 정의
+    const EVENTS = [
+      { name: "전체", value: "전체TOP50" },
+      { name: "선행반", value: "선행반TOP50" },
+      { name: "남자", value: "남자TOP50" },
+      { name: "여자", value: "여자TOP50" },
+      { name: "제멀 남자", value: "제멀남자TOP50" },
+      { name: "제멀 여자", value: "제멀여자TOP50" },
+      { name: "10m왕복달리기 남자", value: "10m왕복달리기남자TOP50" },
+      { name: "10m왕복달리기 여자", value: "10m왕복달리기여자TOP50" },
+      { name: "메디신볼 남자", value: "메디신볼던지기남자TOP50" },
+      { name: "메디신볼 여자", value: "메디신볼던지기여자TOP50" },
+      { name: "좌전굴 남자", value: "배근력남자TOP50" },
+      { name: "좌전굴 여자", value: "배근력여자TOP50" }
+
+    ];
+
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxVVI9lMX4FE1oUc-8U_6z9tVOpsRt46WTTzAKjTLdQ8sWMpAFHDESYEQdHoIyx9YHxBg/exec?type=";
+
+    let currentTab = EVENTS[0].value;
+    let latestData = [];
+    let filteredData = [];
+
+    // 탭 그리기
+    function renderTabs() {
+      const $tabs = document.getElementById('tabs');
+      $tabs.innerHTML = '';
+      EVENTS.forEach(tab => {
+        const btn = document.createElement('button');
+        btn.textContent = tab.name;
+        btn.className = 'tab-btn' + (tab.value === currentTab ? ' active' : '');
+        btn.onclick = () => switchTab(tab.value);
+        $tabs.appendChild(btn);
+      });
+    }
+
+    // 탭 선택(데이터 로드)
+    function switchTab(value) {
+      currentTab = value;
+      renderTabs();
+      document.getElementById('search').value = '';
+      document.getElementById('clearSearch').style.display = 'none';
+      fetchAndRender(currentTab);
+    }
+
+    // API 호출해서 표 뿌리기
+    function fetchAndRender(type) {
+      fetch(apiUrl + encodeURIComponent(type))
+        .then(res => res.json())
+        .then(data => {
+          latestData = data;
+          filteredData = data;
+          renderTable(filteredData);
+        });
+    }
+
+    // 테이블 뿌리기
+    function renderTable(rows) {
+      const tbody = document.querySelector('#rankTable tbody');
+      tbody.innerHTML = '';
+      
+      if (rows.length === 0) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="6" style="text-align: center; padding: 30px; color: var(--gray);">데이터가 없습니다</td>';
+        tbody.appendChild(tr);
+        return;
+      }
+      
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        if(row.rank <= 3) tr.classList.add(`rank-${row.rank}`);
+        
+        ['rank','exam_no','academy','name','gender','grade','record'].forEach(key => {
+          const td = document.createElement('td');
+          td.textContent = row[key] || '';
+          
+          // 상위 3위 강조
+          if (key === 'rank' && row.rank <= 3) {
+            td.innerHTML = `<span style="display: inline-block; width: 22px; height: 22px; line-height: 22px; border-radius: 50%; background: ${
+              row.rank === 1 ? 'gold' : row.rank === 2 ? 'silver' : '#cd7f32'
+            }; color: white; font-weight: bold;">${row.rank}</span>`;
+          }
+          
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 검색 필터
+    function filterTable() {
+      const val = document.getElementById('search').value.trim().toLowerCase();
+      const clearBtn = document.getElementById('clearSearch');
+      
+      if (!val) {
+        filteredData = latestData;
+        clearBtn.style.display = 'none';
+      } else {
+        filteredData = latestData.filter(row =>
+          (row.name && row.name.toLowerCase().includes(val)) ||
+          (row.academy && row.academy.toLowerCase().includes(val)) ||
+          (row.exam_no && row.exam_no.toString().includes(val))
+        );
+        clearBtn.style.display = 'block';
+      }
+      renderTable(filteredData);
+    }
+
+    // 이벤트 리스너 설정
+    document.getElementById('search').addEventListener('input', filterTable);
+    document.getElementById('clearSearch').addEventListener('click', function() {
+      document.getElementById('search').value = '';
+      filterTable();
+      this.style.display = 'none';
+    });
+
+    // 최초 진입시
+    renderTabs();
+    fetchAndRender(currentTab);
+  </script>
+</body>
+</html>
